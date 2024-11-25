@@ -2,6 +2,7 @@ package de.idrinth.skyrimscreenshotmover;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main
 {
@@ -13,29 +14,108 @@ public class Main
         }
         UI ui = new UI();
         new Thread(ui).start();
-        if (start(
+        // Game folders
+        if (startGame(
+                config.getSpecial(),
+                config.specialGame,
+                config
+        )) {
+            ui.activateSpecialGame();
+        }
+        if (startGame(
+                config.getLegacy(),
+                config.legacyGame,
+                config
+        )) {
+            ui.activateLegacyGame();
+        }
+        if (startGame(
+                config.getVr(),
+                config.vrGame,
+                config
+        )) {
+            ui.activateVirtualRealityGame();
+        }
+        // Steam 32 bit
+        if (startSteam(
+            config.getLegacy(),
+            config.steam32,
+            config,
+            config.legacyId
+        )) {
+            ui.activateLegacySteam();
+        }
+        if (startSteam(
             config.getSpecial(),
-            "HKLM\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim Special Edition",
-            config
+            config.steam32,
+            config,
+            config.specialId
         )) {
-            ui.activateSpecial();
+            ui.activateSpecialSteam();
         }
-        if (start(
-            config.getLegacy(),
-            "HKLM\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\skyrim",
-            config
+        if (startSteam(
+            config.getVr(),
+            config.steam32,
+            config,
+            config.vrId
         )) {
-            ui.activateLegacy();
+            ui.activateVirtualRealitySteam();
         }
-        if (start(
+        // Steam 64 bit
+        if (startSteam(
             config.getLegacy(),
-            "HKLM\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim VR",
-            config
+            config.steam64,
+            config,
+            config.legacyId
         )) {
-            ui.activateVirtualReality();
+            ui.activateLegacySteam();
+        }
+        if (startSteam(
+            config.getSpecial(),
+            config.steam64,
+            config,
+            config.specialId
+        )) {
+            ui.activateSpecialSteam();
+        }
+        if (startSteam(
+            config.getVr(),
+            config.steam64,
+            config,
+            config.vrId
+        )) {
+            ui.activateVirtualRealitySteam();
         }
     }
-    private static boolean start(String picDir, String regDir, Config config)
+    private static boolean startSteam(String picDir, String regDir, Config config, long GameId)
+    {
+        String reg = WindowsRegistry.readRegistry(
+            regDir,
+            "InstallPath"
+        );
+        if (null == reg) {
+            return false;
+        }
+        File userdir  = new File(reg.trim() + "\\userdata");
+        if (! userdir.isDirectory()) {
+            return false;
+        }
+        int i = 0;
+        for (File f : Objects.requireNonNull(userdir.listFiles())) {
+            if (f.isDirectory() && f.getName().matches("^[0-9]+$")) {
+                File screenshotFolder = new File(f + "\\760\\remote\\" + GameId + "\\screenshots");
+                if (screenshotFolder.isDirectory()) {
+                    new Thread(new SteamFolderHandler(
+                        new File(picDir),
+                        screenshotFolder
+                    )).start();
+                    i ++;
+                }
+            }
+        }
+        return i > 0;
+    }
+    private static boolean startGame(String picDir, String regDir, Config config)
     {
         String reg = WindowsRegistry.readRegistry(
             regDir,
@@ -44,7 +124,7 @@ public class Main
         if (null == reg) {
             return false;
         }
-        new Thread(new FolderHandler(
+        new Thread(new GameFolderHandler(
             new File(picDir),
             new File(reg.trim()),
             config

@@ -5,6 +5,14 @@ public class Config {
     private String legacy = System.getProperty("user.home") + "/Pictures/Skyrim Legacy Edition";
     private String special = System.getProperty("user.home") + "/Pictures/Skyrim Special Edition";
     private String vr = System.getProperty("user.home") + "/Pictures/Skyrim VR Edition";
+    public final long legacyId = 72850;
+    public final long specialId = 489830;
+    public final long vrId = 611670;
+    public final String steam32 = "HKLM\\SOFTWARE\\Valve\\Steam";
+    public final String steam64 = "HKLM\\SOFTWARE\\WOW6432Node\\Valve\\Steam";
+    public final String legacyGame = "HKLM\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\skyrim";
+    public final String specialGame = "HKLM\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim Special Edition";
+    public final String vrGame = "HKLM\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim VR";
 
     public void setConvert(boolean convert) {
         this.convert = convert;

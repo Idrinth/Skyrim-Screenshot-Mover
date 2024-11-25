@@ -7,16 +7,22 @@ import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
 public class UI implements Runnable {
-    private final JLabel legacy = new JLabel("[ ] Legacy Edition");
-    private final JLabel special = new JLabel("[ ] Special Edition");
-    private final JLabel vr = new JLabel("[ ] VR Edition");
+    private final JLabel legacy = new JLabel();
+    private final JLabel special = new JLabel();
+    private final JLabel vr = new JLabel();
+    private boolean specialGame = false;
+    private boolean legacyGame = false;
+    private boolean vrGame = false;
+    private boolean specialSteam = false;
+    private boolean legacySteam = false;
+    private boolean vrSteam = false;
     public void run()
     {
         JFrame frame = new JFrame("Skyrim Screenshot Mover");  
         JButton button = new JButton("Exit");
-        legacy.setBounds(15,0,115,100);
-        special.setBounds(115,0,220,100);
-        vr.setBounds(220,0,325,100);
+        legacy.setBounds(5,0,115,100);
+        special.setBounds(115,0,235,100);
+        vr.setBounds(235,0,350,100);
         button.setBounds(0,100,350,100);
         frame.add(legacy);
         frame.add(special);
@@ -28,18 +34,67 @@ public class UI implements Runnable {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         button.addActionListener((ActionEvent e) -> {
             System.exit(0);  
-        });  
+        });
+        updateLabels();
     }
-    public void activateLegacy()
+    private void updateLabels()
     {
-        legacy.setText("[X] Legacy Edition");
+        if (legacyGame && legacySteam) {
+            legacy.setText("[G][S] Legacy Edition");
+        } else if (legacyGame) {
+            legacy.setText("[G][ ] Legacy Edition");
+        } else if (legacySteam) {
+            legacy.setText("[ ][S] Legacy Edition");
+        } else {
+            legacy.setText("[ ][ ] Legacy Edition");
+        }
+        if (specialGame && specialSteam) {
+            special.setText("[G][S] Special Edition");
+        } else if (specialGame) {
+            special.setText("[G][ ] Special Edition");
+        } else if (specialSteam) {
+            special.setText("[ ][S] Special Edition");
+        } else {
+            special.setText("[ ][ ] Special Edition");
+        }
+        if (vrGame && vrSteam) {
+            vr.setText("[G][S] VR Edition");
+        } else if (vrGame) {
+            vr.setText("[G][ ] VR Edition");
+        } else if (vrSteam) {
+            vr.setText("[ ][S] VR Edition");
+        } else {
+            vr.setText("[ ][ ] VR Edition");
+        }
     }
-    public void activateSpecial()
+    public void activateLegacyGame()
     {
-        special.setText("[X] Special Edition");
+        legacyGame = true;
+        updateLabels();
     }
-    public void activateVirtualReality()
+    public void activateSpecialGame()
     {
-        vr.setText("[X] VR Edition");
+        specialGame = true;
+        updateLabels();
+    }
+    public void activateVirtualRealityGame()
+    {
+        vrGame = true;
+        updateLabels();
+    }
+    public void activateLegacySteam()
+    {
+        legacySteam = true;
+        updateLabels();
+    }
+    public void activateSpecialSteam()
+    {
+        specialSteam = true;
+        updateLabels();
+    }
+    public void activateVirtualRealitySteam()
+    {
+        vrSteam = true;
+        updateLabels();
     }
 }
