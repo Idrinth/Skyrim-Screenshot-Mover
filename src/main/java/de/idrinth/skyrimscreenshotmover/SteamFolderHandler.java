@@ -23,8 +23,9 @@ public class SteamFolderHandler extends BaseFolderHandler {
         try {
             if (isScreenshot(file)) {
                 File target = new File(screenshots + "/" + getTimestamp(FileUtils.lastModified(file)) + ".jpg");
-                FileUtils.copyFile(file, target);
-                file.delete();
+                if (! target.isFile()) {
+                    FileUtils.copyFile(file, target);
+                }
             }
         } catch (IOException ex) {
             System.err.println(ex);

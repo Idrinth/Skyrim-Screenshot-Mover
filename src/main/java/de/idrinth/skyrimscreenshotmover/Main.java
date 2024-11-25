@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Main
 {
-    public static void main(String[] args) throws IOException, InterruptedException
+    public static void main(String[] args) throws IOException
     {
         Config config = new ConfigFactory().build();
         if (config == null) {
@@ -16,31 +16,33 @@ public class Main
         new Thread(ui).start();
         // Game folders
         if (startGame(
-                config.getSpecial(),
-                config.specialGame,
-                config
+            config.getSpecial(),
+            config.specialGame,
+            config
         )) {
             ui.activateSpecialGame();
         }
         if (startGame(
-                config.getLegacy(),
-                config.legacyGame,
-                config
+            config.getLegacy(),
+            config.legacyGame,
+            config
         )) {
             ui.activateLegacyGame();
         }
         if (startGame(
-                config.getVr(),
-                config.vrGame,
-                config
+            config.getVr(),
+            config.vrGame,
+            config
         )) {
             ui.activateVirtualRealityGame();
+        }
+        if (! config.maySteam()) {
+            return;
         }
         // Steam 32 bit
         if (startSteam(
             config.getLegacy(),
             config.steam32,
-            config,
             config.legacyId
         )) {
             ui.activateLegacySteam();
@@ -48,7 +50,6 @@ public class Main
         if (startSteam(
             config.getSpecial(),
             config.steam32,
-            config,
             config.specialId
         )) {
             ui.activateSpecialSteam();
@@ -56,7 +57,6 @@ public class Main
         if (startSteam(
             config.getVr(),
             config.steam32,
-            config,
             config.vrId
         )) {
             ui.activateVirtualRealitySteam();
@@ -65,7 +65,6 @@ public class Main
         if (startSteam(
             config.getLegacy(),
             config.steam64,
-            config,
             config.legacyId
         )) {
             ui.activateLegacySteam();
@@ -73,7 +72,6 @@ public class Main
         if (startSteam(
             config.getSpecial(),
             config.steam64,
-            config,
             config.specialId
         )) {
             ui.activateSpecialSteam();
@@ -81,13 +79,12 @@ public class Main
         if (startSteam(
             config.getVr(),
             config.steam64,
-            config,
             config.vrId
         )) {
             ui.activateVirtualRealitySteam();
         }
     }
-    private static boolean startSteam(String picDir, String regDir, Config config, long GameId)
+    private static boolean startSteam(String picDir, String regDir, long GameId)
     {
         String reg = WindowsRegistry.readRegistry(
             regDir,

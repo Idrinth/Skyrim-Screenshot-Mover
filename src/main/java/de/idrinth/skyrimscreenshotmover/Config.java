@@ -5,6 +5,7 @@ public class Config {
     private String legacy = System.getProperty("user.home") + "/Pictures/Skyrim Legacy Edition";
     private String special = System.getProperty("user.home") + "/Pictures/Skyrim Special Edition";
     private String vr = System.getProperty("user.home") + "/Pictures/Skyrim VR Edition";
+    private boolean steam = true;
     public final long legacyId = 72850;
     public final long specialId = 489830;
     public final long vrId = 611670;
@@ -38,11 +39,12 @@ public class Config {
         return convert;
     }
 
-    public String toString() {
-        return "convert: " + convert + "\n"
-            + "legacy: " + legacy + "\n"
-            + "special: " + special + "\n"
-            + "vr: " + vr + "\n";
+    public void setSteam(boolean steam) {
+        this.steam = steam;
+    }
+
+    public boolean maySteam() {
+        return steam;
     }
 
     public String getVr() {
@@ -51,5 +53,13 @@ public class Config {
 
     public void setVr(String vr) {
         this.vr = vr;
+    }
+
+    public String toString() {
+        return "convert: " + convert + "\n"
+            + "steam: " + steam + "\n"
+            + "legacy: " + legacy + "\n"
+            + "special: " + special + "\n"
+            + "vr: " + vr + "\n";
     }
 }
