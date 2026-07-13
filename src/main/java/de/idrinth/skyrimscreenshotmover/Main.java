@@ -16,25 +16,47 @@ public class Main
         new Thread(ui).start();
         // Game folders
         if (startGame(
-            config.getSpecial(),
-            config.specialGame,
-            config
+                config.getSpecial(),
+                config.specialGame,
+                config
         )) {
             ui.activateSpecialGame();
         }
         if (startGame(
-            config.getLegacy(),
-            config.legacyGame,
-            config
+                config.getLegacy(),
+                config.legacyGame,
+                config
         )) {
             ui.activateLegacyGame();
         }
         if (startGame(
-            config.getVr(),
-            config.vrGame,
-            config
+                config.getVr(),
+                config.vrGame,
+                config
         )) {
             ui.activateVirtualRealityGame();
+        }
+        // Community Shader folders
+        if (startCommunityShaders(
+                config.getSpecial(),
+                config.specialGame,
+                config
+        )) {
+            ui.activateSpecialCommunityShaders();
+        }
+        if (startCommunityShaders(
+                config.getLegacy(),
+                config.legacyGame,
+                config
+        )) {
+            ui.activateLegacyCommunityShaders();
+        }
+        if (startCommunityShaders(
+                config.getVr(),
+                config.vrGame,
+                config
+        )) {
+            ui.activateVRCommunityShaders();
         }
         if (! config.maySteam()) {
             return;
@@ -115,17 +137,37 @@ public class Main
     private static boolean startGame(String picDir, String regDir, Config config)
     {
         String reg = WindowsRegistry.readRegistry(
-            regDir,
-            "installed path"
+                regDir,
+                "installed path"
         );
         if (null == reg) {
             return false;
         }
         new Thread(new GameFolderHandler(
-            new File(picDir),
-            new File(reg.trim()),
-            config
+                new File(picDir),
+                new File(reg.trim()),
+                config
         )).start();
         return true;
+    }
+    private static boolean startCommunityShaders(String picDir, String regDir, Config config)
+    {
+        String reg = WindowsRegistry.readRegistry(
+                regDir,
+                "installed path"
+        );
+        if (null == reg) {
+            return false;
+        }
+        File csDir = new File(reg.trim() + "/Screenshots");
+        if (csDir.exists() && csDir.isDirectory()) {
+            new Thread(new CommunityShadersFolderHandler(
+                    new File(picDir),
+                    csDir,
+                    config
+            ));
+            return true;
+        }
+        return false;
     }
 }

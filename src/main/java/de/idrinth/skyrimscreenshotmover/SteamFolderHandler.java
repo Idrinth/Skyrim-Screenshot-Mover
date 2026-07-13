@@ -14,8 +14,8 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 
 public class SteamFolderHandler extends BaseFolderHandler {
 
-    public SteamFolderHandler(File screenshots, File gamefolder) {
-        super(screenshots, gamefolder);
+    public SteamFolderHandler(File screenshots, File gameFolder) {
+        super(screenshots, gameFolder);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class SteamFolderHandler extends BaseFolderHandler {
                 }
             }
         } catch (IOException ex) {
-            System.err.println(ex);
+            System.err.println(ex.toString());
         }
     }
 
